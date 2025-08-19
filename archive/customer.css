@@ -1,0 +1,169 @@
+/* Customer Area - Static City Style */
+.customer-area {
+    background: linear-gradient(145deg, #333333, #222222);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotateX(2deg);
+    border: 3px solid #444;
+    color: #ddd;
+}
+
+/* Customer Area Storefront Neon Sign */
+.customer-area:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, #ff9800, #ff5722);
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.6);
+}
+
+#customer-container {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+    perspective: 1000px;
+    background: linear-gradient(to bottom, rgba(30,30,30,0.6), rgba(20,20,20,0.8));
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+
+.customer {
+    width: 100px;
+    height: 150px;
+    border-radius: 50px;
+    position: relative;
+    transform-style: preserve-3d;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+    /* Removed transition for animation stability */
+}
+
+/* Customer face */
+.customer:before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Customer mouth */
+.customer:after {
+    content: '';
+    position: absolute;
+    bottom: 40px;
+    left: 35px;
+    width: 30px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Static customer types */
+.customer.child {
+    background-color: #ffb74d;
+    height: 120px;
+    transform-origin: bottom center;
+    /* Removed bounce animation */
+}
+
+.customer.adult {
+    background-color: #90caf9;
+}
+
+.customer.elder {
+    background-color: #ce93d8;
+}
+
+/* Static customer states - no transitions */
+.customer.entering {
+    opacity: 1; /* Full opacity instead of animated entrance */
+}
+
+.customer.leaving {
+    opacity: 0; /* Instantly hidden instead of animated exit */
+}
+
+#customer-request {
+    background: linear-gradient(145deg, #444, #333);
+    border-radius: 20px;
+    padding: 15px;
+    margin: 15px 0;
+    font-size: 18px;
+    position: relative;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid #555;
+    transform: perspective(500px) rotateX(3deg);
+    color: #f0f0f0;
+    /* Digital display style for city theme */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+}
+
+/* Speech bubble pointer */
+#customer-request:before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 15px 15px 15px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
+}
+
+#customer-feedback {
+    min-height: 60px;
+    margin: 15px 0;
+    font-style: italic;
+    color: #8bc34a; /* Brighter green for visibility against dark background */
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    border-left: 3px solid #8bc34a;
+}
+
+#serve-customer {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 
+        0 6px 0 #e65100,
+        0 0 10px rgba(255, 152, 0, 0.5); /* Subtle glow effect */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* No animations/transitions for stability */
+}
+
+#serve-customer:hover {
+    background-color: #ff5722; /* Color change instead of animation */
+}
+
+#serve-customer:active {
+    background-color: #e65100; /* Color change instead of animation */
+}
+
+#serve-customer:disabled {
+    background-color: #555;
+    box-shadow: 0 6px 0 #333;
+    cursor: not-allowed;
+}

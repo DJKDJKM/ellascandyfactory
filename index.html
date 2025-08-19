@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ella's Candy Factory 3D</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div id="ui-overlay">
+    <div id="money-display">Candy Credits: $0</div>
+    <div id="upgrade-info"></div>
+  </div>
+  <div id="elements-display">
+    <h3>Candy Elements</h3>
+    <div id="active-elements"></div>
+  </div>
+  <div id="controls-help">
+    <strong>Controls:</strong><br>
+    WASD: Move horizontally<br>
+    Q/E: Move up/down<br>
+    Space: Jump<br>
+    Mouse: Look around<br>
+    <br>
+    <strong>Stand on golden faucet to collect money</strong><br>
+    <strong>Click</strong> the game to enable mouse look
+  </div>
+  <div id="floor-notification"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

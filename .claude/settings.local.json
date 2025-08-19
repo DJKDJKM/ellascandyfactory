@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(copy C:workspaceellacandy-factoryjs*.js C:workspaceellacandy-factorysrcjs)",
+      "Bash(copy C:workspaceellacandy-factorymain.js C:workspaceellacandy-factorysrc)",
+      "Bash(dir C:workspaceellacandy-factorysrcjs)",
+      "Bash(xcopy:*)",
+      "Bash(dir:*)",
+      "Bash(copy C:workspaceellacandy-factoryjsrenderer.js C:workspaceellacandy-factorysrcjsrenderer.js)",
+      "Bash(copy C:workspaceellacandy-factoryjscontrols.js C:workspaceellacandy-factorysrcjscontrols.js)",
+      "Bash(copy C:workspaceellacandy-factoryjsui.js C:workspaceellacandy-factorysrcjsui.js)",
+      "Bash(copy C:workspaceellacandy-factoryjsworld.js C:workspaceellacandy-factorysrcjsworld.js)",
+      "Bash(pnpm install:*)",
+      "Bash(npx vite:*)",
+      "Bash(powershell:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm install:*)",
+      "Bash(mv:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

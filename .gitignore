@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+.pnpm-debug.log*
+
+# Build output
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+coverage
+*.log
+
+# Environment
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# Temporary files
+*.tmp
+*.temp

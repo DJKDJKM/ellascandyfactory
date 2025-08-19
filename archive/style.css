@@ -1,0 +1,2898 @@
+/* Ella's Candy Factory - Static City Version */
+* {
+    box-sizing: border-box;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+body {
+    background-color: #1a3c68;
+    margin: 0;
+    padding: 20px;
+    background-image: linear-gradient(to bottom, #1a3c68, #2c5f9e 80%, #3d8b3d 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Static city sky with stars */
+body:before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(1px 1px at 20% 30%, white, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 40% 70%, white, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 60% 10%, white, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 80% 50%, white, rgba(255,255,255,0) 100%);
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+.game-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #111111; /* Darker background for contrast with cards */
+    border-radius: 15px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid #333;
+    
+    /* Static city background */
+    background-image: 
+        linear-gradient(to bottom, #111111 60%, #222222 100%),
+        repeating-linear-gradient(90deg, 
+            transparent 0px, transparent 30px, 
+            rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 60px);
+}
+
+/* Static city lights */
+.game-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(1px 1px at 10% 10%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 20% 20%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 30% 30%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 40% 40%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 50% 50%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 60% 60%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 70% 70%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 80% 80%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 90% 90%, yellow, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.3;
+}
+
+/* Static city road */
+.game-container:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: #333;
+    z-index: 1;
+    background-image: 
+        linear-gradient(90deg, #333 70%, #ff3 70%, #ff3 73%, #333 73%, #333 100%),
+        linear-gradient(90deg, #222, #333);
+    background-size: 100px 100%, 100% 100%;
+    background-position: 40px 0, 0 0;
+}
+
+h1 {
+    color: #f8e71c;
+    text-shadow: 
+        4px 4px 0px #ff6b9d, 
+        6px 6px 0px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(255, 204, 0, 0.8); /* Enhanced gold glow for visibility */
+    font-size: 36px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+    /* Static neon effect */
+    text-shadow: 0 0 5px #f8e71c, 0 0 15px #f8e71c, 0 0 20px #ff6b9d;
+}
+
+h1:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 10%;
+    right: 10%;
+    height: 6px;
+    background: linear-gradient(to right, #ff6b9d, #ffcfdf, #ff6b9d);
+    border-radius: 3px;
+    box-shadow: 0 0 8px #ff6b9d;
+}
+
+h2 {
+    color: #673ab7;
+    margin-top: 15px;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: inline-block;
+    font-size: 24px;
+}
+
+.factory-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    position: relative;
+    background: linear-gradient(to bottom, #444, #333);
+    padding: 25px 15px 15px;
+    border-radius: 15px;
+    border: 3px solid #555;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Static factory building structure */
+.factory-area:before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    background: linear-gradient(to right, #666, #444);
+    transform: perspective(500px) rotateX(50deg);
+    transform-origin: bottom center;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+/* Static factory smokestacks */
+.factory-area:after {
+    content: '';
+    position: absolute;
+    top: -35px;
+    right: 50px;
+    width: 15px;
+    height: 30px;
+    background: #333;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 
+        -30px 5px 0 #333, 
+        -60px 2px 0 #333, 
+        0 -10px 8px rgba(100, 100, 100, 0.2),
+        -30px -15px 8px rgba(100, 100, 100, 0.2),
+        -60px -12px 8px rgba(100, 100, 100, 0.2);
+}
+
+.ingredients-section, .mixing-bowl, .candy-result {
+    background-color: #2c2c2c;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+    width: 250px;
+    transform: perspective(800px) rotateY(-5deg) rotateX(3deg);
+    border: 3px solid #444;
+    position: relative;
+    overflow: hidden;
+    color: #ddd;
+}
+
+/* Static building roofs */
+.ingredients-section:before, .mixing-bowl:before, .candy-result:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 15px;
+    background: #222;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.2);
+    z-index: -1;
+}
+
+/* Static building windows */
+.ingredients-section:after, .mixing-bowl:after, .candy-result:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 15px;
+    background: linear-gradient(to right, 
+        transparent 0%, transparent 15%, 
+        rgba(255, 255, 150, 0.7) 15%, rgba(255, 255, 150, 0.7) 30%,
+        transparent 30%, transparent 45%,
+        rgba(255, 255, 150, 0.7) 45%, rgba(255, 255, 150, 0.7) 60%,
+        transparent 60%, transparent 75%,
+        rgba(255, 255, 150, 0.7) 75%, rgba(255, 255, 150, 0.7) 90%,
+        transparent 90%, transparent 100%
+    );
+    z-index: 1;
+    border-radius: 3px;
+}
+
+.ingredient-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.ingredient {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    background: linear-gradient(145deg, #333, #222);
+    color: #ddd;
+    box-shadow: 
+        0 6px 0 #111,
+        0 8px 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.ingredient:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transform: translateZ(-2px);
+}
+
+.ingredient:hover {
+    /* No transform to prevent glitches */
+    background-color: rgba(255, 255, 255, 0.1); /* Simple color change instead of transform */
+    text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+}
+
+.ingredient:active {
+    /* No transform to prevent glitches */
+    box-shadow: 
+        0 3px 0 #111,
+        0 4px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Ingredient color styling */
+[data-ingredient="sugar"] {
+    background-color: #ffffff;
+    color: #666;
+    border: 3px solid #e0e0e0;
+    box-shadow: 0 6px 0 #cccccc;
+}
+
+[data-ingredient="sugar"]:active {
+    box-shadow: 0 2px 0 #cccccc;
+}
+
+[data-ingredient="chocolate"] {
+    background-color: #795548;
+    color: #ffffff;
+    border: 3px solid #5d4037;
+    box-shadow: 0 6px 0 #3e2723;
+}
+
+[data-ingredient="chocolate"]:active {
+    box-shadow: 0 2px 0 #3e2723;
+}
+
+[data-ingredient="strawberry"] {
+    background-color: #ff5252;
+    color: #ffffff;
+    border: 3px solid #d32f2f;
+    box-shadow: 0 6px 0 #b71c1c;
+}
+
+[data-ingredient="strawberry"]:active {
+    box-shadow: 0 2px 0 #b71c1c;
+}
+
+[data-ingredient="lemon"] {
+    background-color: #ffeb3b;
+    color: #666;
+    border: 3px solid #fdd835;
+    box-shadow: 0 6px 0 #f9a825;
+}
+
+[data-ingredient="lemon"]:active {
+    box-shadow: 0 2px 0 #f9a825;
+}
+
+[data-ingredient="blueberry"] {
+    background-color: #3f51b5;
+    color: #ffffff;
+    border: 3px solid #303f9f;
+    box-shadow: 0 6px 0 #1a237e;
+}
+
+[data-ingredient="blueberry"]:active {
+    box-shadow: 0 2px 0 #1a237e;
+}
+
+.bowl {
+    width: 150px;
+    height: 150px;
+    background-color: #d7ccc8;
+    border-radius: 75px 75px 0 0;
+    margin: 20px auto;
+    position: relative;
+    border: 5px solid #bcaaa4;
+    border-bottom: none;
+    overflow: hidden;
+    box-shadow: 
+        inset 0 10px 20px rgba(0, 0, 0, 0.1),
+        0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.bowl:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0) 70%
+    );
+    border-radius: 50% 50% 0 0;
+    pointer-events: none;
+}
+
+#bowl-contents {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    border-radius: 0 0 10% 10%;
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.bowl:after {
+    content: '';
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%);
+    pointer-events: none;
+}
+
+#mix-button, #reset-button, #package-button {
+    padding: 12px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#mix-button {
+    background-color: #4caf50;
+    color: white;
+    box-shadow: 0 6px 0 #1b5e20;
+}
+
+#mix-button:hover {
+    /* No transform to prevent glitches */
+    background-color: #66bb6a; /* Lighter green instead of transform */
+}
+
+#mix-button:active {
+    /* No transform to prevent glitches */
+    background-color: #388e3c; /* Darker green instead of transform */
+}
+
+#reset-button {
+    background-color: #f44336;
+    color: white;
+    box-shadow: 0 6px 0 #b71c1c;
+}
+
+#reset-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #b71c1c;
+}
+
+#reset-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #b71c1c;
+}
+
+#package-button {
+    background-color: #2196f3;
+    color: white;
+    box-shadow: 0 6px 0 #0d47a1;
+}
+
+#package-button:hover:not([disabled]) {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #0d47a1;
+}
+
+#package-button:active:not([disabled]) {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #0d47a1;
+}
+
+#package-button:disabled {
+    background-color: #bdbdbd;
+    color: #757575;
+    box-shadow: 0 6px 0 #757575;
+    cursor: not-allowed;
+}
+
+.candy {
+    position: relative;
+}
+
+.candy.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: currentColor;
+    box-shadow: 
+        inset 0 -8px 0 rgba(0,0,0,0.2),
+        0 6px 10px rgba(0,0,0,0.3);
+}
+
+.candy.square {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    background-color: currentColor;
+    box-shadow: 
+        inset 0 -8px 0 rgba(0,0,0,0.2),
+        0 6px 10px rgba(0,0,0,0.3);
+}
+
+.candy.star {
+    width: 0;
+    height: 0;
+    color: currentColor;
+    position: relative;
+    margin: 20px 0;
+    border-right: 30px solid transparent;
+    border-bottom: 20px solid currentColor;
+    border-left: 30px solid transparent;
+    transform: rotate(35deg);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+}
+
+.candy.star:before {
+    content: '';
+    position: absolute;
+    height: 0;
+    width: 0;
+    top: -13px;
+    left: -21px;
+    border-bottom: 20px solid currentColor;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    transform: rotate(-35deg);
+}
+
+.candy.star:after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: -32px;
+    width: 0;
+    height: 0;
+    border-right: 30px solid transparent;
+    border-bottom: 20px solid currentColor;
+    border-left: 30px solid transparent;
+    transform: rotate(-70deg);
+}
+
+.candy.heart {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    transform: rotate(-45deg);
+    background-color: currentColor;
+    box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+}
+
+.candy.heart:before, 
+.candy.heart:after {
+    content: "";
+    background-color: currentColor;
+    border-radius: 50%;
+    position: absolute;
+    width: 35px;
+    height: 35px;
+}
+
+.candy.heart:before {
+    top: -25px;
+    left: 0;
+}
+
+.candy.heart:after {
+    top: 0;
+    right: -25px;
+}
+
+.candy-display {
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+}
+
+.shop-area {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    position: relative;
+    border: 3px solid #444;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    color: #fff;
+    transform: perspective(800px) rotateX(3deg);
+}
+
+/* Static shop windows and storefront */
+.shop-area:after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 20px;
+    background: linear-gradient(to right, 
+        transparent 0%, transparent 10%, 
+        rgba(255, 255, 0, 0.5) 10%, rgba(255, 255, 0, 0.5) 20%,
+        transparent 20%, transparent 30%,
+        rgba(0, 255, 255, 0.5) 30%, rgba(0, 255, 255, 0.5) 40%,
+        transparent 40%, transparent 50%,
+        rgba(255, 0, 255, 0.5) 50%, rgba(255, 0, 255, 0.5) 60%,
+        transparent 60%, transparent 70%,
+        rgba(0, 255, 0, 0.5) 70%, rgba(0, 255, 0, 0.5) 80%,
+        transparent 80%, transparent 90%,
+        rgba(255, 0, 0, 0.5) 90%, rgba(255, 0, 0, 0.5) 100%
+    );
+    z-index: 1;
+    border-radius: 3px;
+    opacity: 0.6;
+}
+
+.shop-area:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, #4caf50, #2196f3);
+    border-radius: 15px 15px 0 0;
+    transform-origin: bottom center;
+    transform: perspective(100px) rotateX(30deg);
+}
+
+.packaged-candy {
+    display: inline-block;
+    width: 100px;
+    height: 120px;
+    margin: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: perspective(500px) rotateY(10deg);
+    overflow: hidden;
+}
+
+.packaged-candy:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+    z-index: 2;
+}
+
+.packaged-candy .candy {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+}
+
+#packaged-candies {
+    min-height: 150px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* Shop sign */
+.shop-area h2:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #0ff;
+    box-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+}
+
+#sell-button {
+    background-color: #ff9800;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #e65100;
+}
+
+#sell-button:hover:not([disabled]) {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #e65100;
+}
+
+#sell-button:active:not([disabled]) {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #e65100;
+}
+
+#sell-button:disabled {
+    background-color: #bdbdbd;
+    color: #757575;
+    box-shadow: 0 6px 0 #757575;
+    cursor: not-allowed;
+}
+
+.money-display {
+    background-color: #212121;
+    color: #4caf50;
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid #4caf50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.customer-area {
+    background-color: #424242;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    position: relative;
+    border: 3px solid #616161;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    transform: perspective(800px) rotateX(1deg) rotateY(2deg);
+}
+
+/* Static street in front of customer area */
+.customer-area:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: #333;
+    z-index: 0;
+    background-image: 
+        radial-gradient(circle at 10% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%),
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%);
+    background-size: 100px 10px;
+    background-position: 20px 0;
+}
+
+#customer-container {
+    height: 150px;
+    position: relative;
+    margin: 15px 0;
+    background: linear-gradient(to bottom, #222 0%, #222 60%, #333 60%, #333 100%);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.customer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 120px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+}
+
+/* Static city buildings for customers */
+.customer:before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: -15px;
+    width: 50px;
+    height: 100px;
+    background: linear-gradient(to bottom, #333, #222);
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3),
+                5px 10px 0 -3px rgba(255, 255, 0, 0.1),
+                -10px 20px 0 -5px rgba(0, 255, 255, 0.1);
+    z-index: -1;
+}
+
+/* Static skyscraper tops */
+.customer:after {
+    content: '';
+    position: absolute;
+    bottom: 90px;
+    left: -10px;
+    width: 40px;
+    height: 20px;
+    background: #111;
+    transform: perspective(100px) rotateX(30deg);
+    transform-origin: bottom center;
+    border-radius: 3px;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    z-index: -1;
+}
+
+/* Special static skyscraper types */
+.customer.child:before {
+    background: linear-gradient(to bottom, #333, #392613);
+    height: 70px;
+}
+
+.customer.adult:before {
+    background: linear-gradient(to bottom, #333, #14283d);
+    height: 100px;
+}
+
+.customer.elder:before {
+    background: linear-gradient(to bottom, #333, #331431);
+    height: 85px;
+}
+
+.customer.entering {
+    transform: translateX(-50%);
+}
+
+.customer.leaving {
+    transform: translateX(200%);
+}
+
+.customer.child {
+    background-color: #ffb74d;
+    height: 120px;
+    transform-origin: bottom center;
+}
+
+.customer.adult {
+    background-color: #90caf9;
+}
+
+.customer.vip {
+    background-color: gold;
+    border: 3px solid #c9b037;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+#customer-request {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+}
+
+#serve-customer {
+    background-color: #9c27b0;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #6a1b9a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#serve-customer:hover:not([disabled]) {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #6a1b9a;
+}
+
+#serve-customer:active:not([disabled]) {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #6a1b9a;
+}
+
+#serve-customer:disabled {
+    background-color: #bdbdbd;
+    color: #757575;
+    box-shadow: 0 6px 0 #757575;
+    cursor: not-allowed;
+}
+
+#customer-feedback {
+    min-height: 50px;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #4caf50;
+}
+
+.game-controls {
+    background-color: #212121;
+    padding: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
+    position: relative;
+    border: 3px solid #424242;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: perspective(800px) rotateX(-2deg);
+}
+
+/* Control center roof */
+.game-controls:before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    background: linear-gradient(to right, #333, #212121);
+    transform: perspective(500px) rotateX(50deg);
+    transform-origin: bottom center;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+/* Static control tower antenna */
+.game-controls:after {
+    content: '';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 15px;
+    background: #666;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+#start-day-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #2e7d32;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#start-day-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #2e7d32, 0 15px 20px rgba(0, 0, 0, 0.2);
+}
+
+#start-day-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #2e7d32;
+}
+
+#start-day-button:disabled {
+    background-color: #bdbdbd;
+    box-shadow: 0 6px 0 #757575;
+    cursor: not-allowed;
+}
+
+.day-info {
+    background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.2);
+    color: #388e3c;
+}
+
+.shop-upgrades {
+    margin-top: 30px;
+    background-color: #263238;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    position: relative;
+    border: 3px solid #37474f;
+}
+
+.shop-upgrades h2 {
+    color: #4fc3f7;
+    margin-bottom: 10px;
+}
+
+.upgrades-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.upgrade-item {
+    background-color: #37474f;
+    border-radius: 15px;
+    padding: 15px;
+    width: 200px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.upgrade-item:hover {
+    /* No transform to prevent glitches */
+    filter: brightness(1.2); /* Simple brightness change instead of transform */
+    border-color: #03a9f4; /* Highlight border color on hover */
+}
+
+.upgrade-item:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, #4fc3f7, #29b6f6, #03a9f4);
+}
+
+.upgrade-item h3 {
+    color: #81d4fa;
+    margin-top: 5px;
+}
+
+.upgrade-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 10px auto;
+    display: block;
+}
+
+.price {
+    color: #ffeb3b;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.buy-button {
+    background-color: #03a9f4;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #0277bd;
+}
+
+.buy-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 #0277bd;
+}
+
+.buy-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #0277bd;
+}
+
+.upgrade-purchased {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4caf50;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+.purchased {
+    opacity: 0.7;
+}
+
+.purchased .buy-button {
+    display: none;
+}
+
+/* Color styling for candies */
+.candy.pink {
+    color: #ff6b9d;
+}
+
+.candy.blue {
+    color: #42a5f5;
+}
+
+.candy.green {
+    color: #66bb6a;
+}
+
+.candy.yellow {
+    color: #ffee58;
+}
+
+.candy.purple {
+    color: #ab47bc;
+}
+
+/* Rainbow candy styling (static gradient instead of animation) */
+.rainbow {
+    background: linear-gradient(
+        to right,
+        #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff
+    ) !important;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 20px 10px;
+    }
+    
+    .factory-area, .shop-area, .customer-area, .game-controls {
+        flex-direction: column;
+    }
+    
+    .ingredients-section, .mixing-bowl, .candy-result {
+        width: 100%;
+        margin: 10px 0;
+    }
+    
+    .upgrades-container {
+        gap: 10px;
+    }
+    
+    .upgrade-item {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 28px;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    .upgrade-item {
+        width: 100%;
+    }
+    
+    #start-day-button, #sell-button, #serve-customer {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Fixed syntax error - removed orphaned properties */
+
+/* Minecraft-style blocky sky */
+body:before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Minecraft-style pixelated gradient sky */
+    background-image: linear-gradient(
+        to bottom,
+        #1a3c68 0%,
+        #2c5f9e 60%,
+        #3d8b3d 100%
+    );
+    /* Add pixelated stars - no animation */
+    background-image: 
+        radial-gradient(1px 1px at 50px 50px, white, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 150px 150px, white, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 250px 50px, white, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 300px 250px, white, rgba(255,255,255,0) 100%),
+        linear-gradient(
+            to bottom,
+            #1a3c68 0%,
+            #2c5f9e 60%,
+            #3d8b3d 100%
+        );
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    pointer-events: none;
+    z-index: -1;
+    /* No animation or transitions */
+}
+
+.game-container {
+    max-width: 900px;
+    margin: 20px auto;
+    /* Darker background to create more contrast with cards */
+    background-color: #121212;
+    border-radius: 15px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(2deg);
+    border: 8px solid #333; /* Thicker border for Minecraft style */
+    
+    /* City background with skyscrapers silhouette - darkened for contrast */
+    background-image: 
+        linear-gradient(to bottom, #121212 60%, #222222 100%),
+        repeating-linear-gradient(90deg, 
+            transparent 0px, transparent 30px, 
+            rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 60px);
+}
+
+/* Dynamic city lights */
+.game-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(1px 1px at 10% 10%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 20% 20%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 30% 30%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 40% 40%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 50% 50%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 60% 60%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 70% 70%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 80% 80%, yellow, rgba(255,255,255,0) 100%),
+        radial-gradient(1px 1px at 90% 90%, yellow, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.3;
+    /* Removed cityLights animation to fix glitches */
+}
+
+/* City Road at the bottom with moving traffic - further simplified */
+.game-container:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: #333;
+    z-index: 1;
+    background-image: 
+        linear-gradient(90deg, #333 70%, #ff3 70%, #ff3 73%, #333 73%, #333 100%),
+        linear-gradient(90deg, #222, #333);
+    background-size: 100px 100%, 100% 100%;
+    background-position: 50px 0, 0 0; /* Static position instead of animation */
+    /* Removed movingTraffic animation to fix glitches */
+}
+
+/* Removed movingTraffic keyframes animation */
+
+h1 {
+    color: #f8e71c;
+    text-shadow: 4px 4px 0px #ff6b9d, 6px 6px 0px rgba(0, 0, 0, 0.5);
+    font-size: 36px;
+    letter-spacing: 2px;
+    transform: perspective(500px) rotateX(5deg);
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+    /* Simplified neon sign effect with less intensity */
+    text-shadow: 0 0 5px #f8e71c, 0 0 15px #f8e71c, 0 0 20px #ff6b9d;
+}
+
+h1:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 10%;
+    right: 10%;
+    height: 6px;
+    background: linear-gradient(to right, #ff6b9d, #ffcfdf, #ff6b9d);
+    border-radius: 3px;
+    box-shadow: 0 0 8px #ff6b9d;
+}
+
+h2 {
+    color: #673ab7;
+    margin-top: 15px;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    transform: perspective(500px) rotateX(2deg);
+    position: relative;
+    display: inline-block;
+    font-size: 24px;
+}
+
+.factory-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    perspective: 1000px;
+    position: relative;
+    transform-style: preserve-3d;
+    /* Darker background for better contrast with cards */
+    background: linear-gradient(to bottom, #222, #111);
+    padding: 25px 15px 15px;
+    /* More blocky for Minecraft style */
+    border-radius: 8px;
+    /* Minecraft-style directional shadow */
+    box-shadow: 
+        10px 10px 0 rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(0, 0, 0, 0.8);
+    /* Minecraft-style border */
+    border: 5px solid #444;
+    /* Added outline for Minecraft-style inset effect */
+    outline: 3px solid #111;
+    outline-offset: -8px;
+    border: 3px solid #555;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    /* Removed animation to reduce conflicts */
+}
+
+/* Factory Building Structure - Industrial District */
+.factory-area:before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    /* Minecraft-style blocky gradient */
+    background: linear-gradient(to right, #777, #555);
+    /* More exaggerated angle for Minecraft style */
+    transform: perspective(500px) rotateX(60deg);
+    transform-origin: bottom center;
+    /* Squared corners for Minecraft style */
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    /* Minecraft-style blocky borders */
+    border-top: 3px solid #888;
+    border-left: 3px solid #666;
+    border-right: 3px solid #666;
+}
+
+/* Factory Smokestacks with Simplified Smoke */
+.factory-area:after {
+    content: '';
+    position: absolute;
+    top: -35px;
+    right: 50px;
+    width: 15px;
+    height: 30px;
+    background: #333;
+    border-radius: 3px 3px 0 0;
+    box-shadow: -30px 5px 0 #333, -60px 2px 0 #333, 
+                0 -10px 8px rgba(100, 100, 100, 0.2),
+                -30px -15px 8px rgba(100, 100, 100, 0.2),
+                -60px -12px 8px rgba(100, 100, 100, 0.2);
+}
+
+.ingredients-section, .mixing-bowl, .candy-result {
+    background: linear-gradient(135deg, #5a5a5a, #444444); /* Even lighter for visibility */
+    border-radius: 8px; /* More blocky, Minecraft-style corners */
+    padding: 20px;
+    margin: 15px;
+    /* Minecraft-style 3D effect with exaggerated depth */
+    box-shadow: 
+        12px 12px 0 #111, /* Strong right shadow */
+        0px 12px 0 #111,  /* Strong bottom shadow */
+        0 0 20px rgba(255, 255, 0, 0.4); /* Subtle glow */
+    width: 250px;
+    /* Minecraft-style 3D transformation with exaggerated perspective */
+    transform: 
+        perspective(500px) 
+        rotateY(-15deg) 
+        rotateX(5deg)
+        translateZ(20px);
+    border: 6px solid #ffcc00; /* Even thicker gold border */
+    position: relative;
+    /* Removed transition to fix glitches */
+    overflow: hidden;
+    transform-style: preserve-3d;
+    color: #ffffff; /* Brighter text color */
+    /* Minecraft-style inset */
+    outline: 4px solid #222;
+    outline-offset: -8px;
+}
+
+.ingredients-section:hover, .mixing-bowl:hover, .candy-result:hover {
+    /* No hover transform to prevent glitches */
+    box-shadow: 0 25px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 255, 0, 0.3);
+    border-color: #ffcc00;
+    z-index: 10;
+}
+
+/* Enhanced heading styles for better visibility */
+.factory-area h2 {
+    color: #ffdd33; /* Even brighter gold color */
+    text-shadow: 
+        0 0 10px rgba(255, 204, 0, 0.7), /* Stronger gold glow */
+        0 0 20px rgba(255, 204, 0, 0.5),
+        3px 3px 0 #000; /* Minecraft-style drop shadow */
+    font-size: 30px; /* Larger font */
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 2px;
+    /* Minecraft-style blocky border and background */
+    border: 4px solid #ffcc00;
+    background: rgba(0,0,0,0.5);
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    /* Minecraft-style bottom edge */
+    border-bottom-width: 6px;
+    background: linear-gradient(to bottom, rgba(255, 204, 0, 0.1), transparent); /* Subtle gradient background */
+    border-radius: 5px 5px 0 0;
+    padding-top: 5px;
+}
+
+/* Factory Buildings - With lit windows */
+.ingredients-section:before, .mixing-bowl:before, .candy-result:before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 15px;
+    background: #222;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.2);
+    z-index: -1;
+}
+
+/* Building Windows with Simplified Lighting */
+.ingredients-section:after, .mixing-bowl:after, .candy-result:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 15px;
+    background: linear-gradient(to right, 
+        transparent 0%, transparent 15%, 
+        rgba(255, 255, 150, 0.7) 15%, rgba(255, 255, 150, 0.7) 30%,
+        transparent 30%, transparent 45%,
+        rgba(255, 255, 150, 0.7) 45%, rgba(255, 255, 150, 0.7) 60%,
+        transparent 60%, transparent 75%,
+        rgba(255, 255, 150, 0.7) 75%, rgba(255, 255, 150, 0.7) 90%,
+        transparent 90%, transparent 100%
+    );
+    z-index: 1;
+    border-radius: 3px;
+}
+
+.ingredient-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.ingredient {
+    padding: 10px;
+    /* Minecraft-style thick border */
+    border: 4px solid #ffcc00; 
+    /* More blocky corners */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    position: relative;
+    /* Minecraft-style gradient */
+    background: linear-gradient(145deg, #555, #444);
+    color: #fff; /* Brighter text */
+    /* Minecraft-style directional shadows */
+    box-shadow: 
+        6px 6px 0 #111, /* Right shadow */
+        0 6px 0 #111;   /* Bottom shadow */
+    /* Removed transition to fix glitches */
+    transform-style: preserve-3d;
+    /* Minecraft-style exaggerated depth */
+    transform: translateZ(10px);
+    margin-bottom: 15px;
+    /* Enhanced text for visibility */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    /* Minecraft-style outline */
+    outline: 2px solid #222;
+    outline-offset: -4px;
+}
+
+.ingredient:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transform: translateZ(-2px);
+}
+
+.ingredient:hover {
+    transform: translateY(-3px) translateZ(5px);
+    box-shadow: 
+        0 9px 0 #111,
+        0 12px 15px rgba(0, 0, 0, 0.3),
+        0 0 5px rgba(255, 255, 0, 0.5);
+    text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+}
+
+.ingredient:active {
+    transform: translateY(3px) translateZ(2px);
+    box-shadow: 
+        0 3px 0 #111,
+        0 4px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Ingredient color styling */
+[data-ingredient="sugar"] {
+    background-color: #ffffff;
+    color: #666;
+    border: 3px solid #e0e0e0;
+    box-shadow: 0 6px 0 #cccccc;
+}
+
+[data-ingredient="sugar"]:active {
+    box-shadow: 0 2px 0 #cccccc;
+}
+
+[data-ingredient="chocolate"] {
+    background-color: #795548;
+    color: white;
+    box-shadow: 0 6px 0 #5d4037;
+}
+
+[data-ingredient="chocolate"]:active {
+    box-shadow: 0 2px 0 #5d4037;
+}
+
+[data-ingredient="strawberry"] {
+    background-color: #ff5252;
+    color: white;
+    box-shadow: 0 6px 0 #d32f2f;
+}
+
+[data-ingredient="strawberry"]:active {
+    box-shadow: 0 2px 0 #d32f2f;
+}
+
+[data-ingredient="lemon"] {
+    background-color: #ffeb3b;
+    color: #333;
+    box-shadow: 0 6px 0 #fbc02d;
+}
+
+[data-ingredient="lemon"]:active {
+    box-shadow: 0 2px 0 #fbc02d;
+}
+
+.bowl {
+    width: 160px;
+    height: 160px;
+    /* Minecraft-style blocky gradient */
+    background: linear-gradient(145deg, #666, #444);
+    /* More blocky corners for Minecraft style */
+    border-radius: 25% 25% 5% 5%;
+    margin: 25px auto;
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    /* Exaggerated Minecraft-style perspective */
+    transform: perspective(400px) rotateX(25deg);
+    /* Minecraft-style shadows with strong directional light */
+    box-shadow: 
+        10px 10px 0 #111, /* Strong right shadow */
+        0 10px 0 #111,    /* Strong bottom shadow */
+        0 0 20px rgba(255, 255, 0, 0.3); /* Enhanced glow */
+    /* Thicker blocky border */
+    border: 6px solid #ffcc00;
+    /* Minecraft-style outline */
+    outline: 3px solid #222;
+    outline-offset: -6px;
+    /* Factory Processing Plant */
+    background-image: 
+        repeating-linear-gradient(0deg, 
+            transparent 0, transparent 5px, 
+            rgba(255,255,255,0.03) 5px, rgba(255,255,255,0.03) 10px);
+}
+
+.bowl:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(
+        135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0) 70%
+    );
+    border-radius: 50% 50% 0 0;
+    pointer-events: none;
+    /* Removed processing light animation to fix glitches */
+    background: linear-gradient(
+        135deg, 
+        rgba(255,255,255,0.1) 0%, 
+        rgba(255,255,255,0) 70%
+    );
+}
+
+#bowl-contents {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    /* Removed transition to fix glitches */
+    /* More blocky for Minecraft style */
+    border-radius: 0 0 5% 5%;
+    /* Minecraft-style shadows and glow */
+    box-shadow: 
+        inset 0 8px 0 #111,
+        inset 8px 0 0 #111,
+        0 0 15px rgba(255, 255, 0, 0.5); /* Enhanced glow */
+    /* Minecraft-style blocky border */
+    border-top: 5px solid #ffcc00;
+    /* Added outline for a more blocky feel */
+    outline: 2px solid #222;
+    outline-offset: -4px;
+    /* Removed animation to fix glitching */
+}
+
+.bowl:after {
+    content: '';
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%);
+    pointer-events: none;
+}
+
+#mix-button, #reset-button, #package-button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 5px;
+    /* Removed transition to fix glitches */
+    transform-style: preserve-3d;
+    position: relative;
+    text-transform: uppercase;
+}
+
+#mix-button {
+    background-color: #4caf50;
+    color: white;
+    box-shadow: 0 6px 0 #2e7d32;
+}
+
+#reset-button {
+    background-color: #f44336;
+    color: white;
+    box-shadow: 0 6px 0 #c62828;
+}
+
+#package-button {
+    background-color: #2196f3;
+    color: white;
+    box-shadow: 0 6px 0 #1565c0;
+}
+
+#mix-button:hover, #reset-button:hover, #package-button:hover {
+    /* No transform to prevent glitches */
+    filter: brightness(1.2); /* Simple brightness change instead of transform */
+}
+
+#reset-button:hover {
+    background-color: #e53935; /* Brighter red instead of shadow changes */
+}
+
+#package-button:hover {
+    background-color: #1e88e5; /* Brighter blue instead of shadow changes */
+}
+
+#mix-button:active, #reset-button:active, #package-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #2e7d32;
+}
+
+#reset-button:active {
+    box-shadow: 0 3px 0 #c62828;
+}
+
+#package-button:active {
+    box-shadow: 0 3px 0 #1565c0;
+}
+
+#bowl-contents {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    /* Removed transition to fix glitches */
+    border-radius: 0 0 10% 10%;
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#mix-button, #reset-button, #package-button, #sell-button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    /* Removed transition to fix glitches */
+}
+
+#mix-button {
+    background-color: #4caf50;
+    color: white;
+}
+
+#reset-button {
+    background-color: #f44336;
+    color: white;
+}
+
+#package-button {
+    background-color: #2196f3;
+    color: white;
+}
+
+#package-button:disabled {
+    background-color: #b0bec5;
+    cursor: not-allowed;
+}
+
+.candy-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.color-picker, .shape-picker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#candy-display {
+    width: 100px;
+    height: 100px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Candy shapes */
+.candy.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.candy.square {
+    width: 80px;
+    height: 80px;
+}
+
+/* Candy display styles */
+#candy-display {
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    perspective: 600px;
+}
+
+.candy {
+    transform-style: preserve-3d;
+    /* Removed gentleFloat animation to fix glitches */
+    position: relative;
+    /* Adding a static drop shadow to simulate floating effect */
+    filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2));
+}
+
+/* Removed gentleFloat keyframes animation */
+
+.candy.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: currentColor;
+    box-shadow: 
+        0 10px 20px rgba(0,0,0,0.2),
+        inset 0 -8px 15px rgba(0,0,0,0.1),
+        inset 0 8px 15px rgba(255,255,255,0.3);
+    transform-style: preserve-3d;
+    transform: perspective(500px) rotateX(5deg);
+}
+
+.candy.circle:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: inherit;
+    opacity: 0.6;
+    transform: translateZ(-5px);
+    filter: blur(2px);
+    border-radius: 50%;
+}
+
+.candy.circle:after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+}
+
+.candy.square {
+    width: 80px;
+    height: 80px;
+    background-color: currentColor;
+    border-radius: 10px;
+    box-shadow: 
+        0 10px 20px rgba(0,0,0,0.2),
+        inset 0 -8px 15px rgba(0,0,0,0.1),
+        inset 0 8px 15px rgba(255,255,255,0.3);
+    transform: perspective(500px) rotateX(10deg) rotateY(10deg);
+    transform-style: preserve-3d;
+}
+
+.candy.square:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: inherit;
+    opacity: 0.6;
+    transform: translateZ(-5px);
+    filter: blur(2px);
+    border-radius: 10px;
+}
+
+.candy.square:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+}
+
+.candy.star {
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 80px solid currentColor;
+    position: relative;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+    transform-style: preserve-3d;
+    transform: perspective(500px) rotateX(10deg);
+}
+
+.candy.star:before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: -40px;
+    width: 80px;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 80px solid currentColor;
+    transform: rotate(72deg) translateZ(-2px);
+    opacity: 0.8;
+}
+
+.candy.star:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-top: 80px solid currentColor;
+    position: absolute;
+    top: 25px;
+    left: -40px;
+    filter: drop-shadow(0 -5px 5px rgba(0,0,0,0.1));
+}
+
+.candy.heart {
+    width: 80px;
+    height: 80px;
+    background-color: currentColor;
+    transform: perspective(500px) rotate(45deg);
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.candy.heart:before,
+.candy.heart:after {
+    content: "";
+    width: 80px;
+    height: 80px;
+    background-color: currentColor;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+}
+
+.candy.heart:before {
+    top: -40px;
+    left: 0;
+}
+
+.candy.heart:after {
+    top: 0;
+    left: -40px;
+}
+
+#packaged-candies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+    min-height: 120px;
+}
+
+.shop-area {
+    background: linear-gradient(to bottom, #2a2a2a, #222);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 0 auto 30px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    transform: perspective(800px) rotateX(2deg);
+    border: 3px solid #444;
+    position: relative;
+    /* Removed transition to fix glitches */
+    overflow: hidden;
+    transform-style: preserve-3d;
+    color: #ddd;
+}
+
+/* Commercial District Neon Signs */
+.shop-area:before {
+    content: 'SHOPPING DISTRICT';
+    position: absolute;
+    top: -25px;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(45deg, #222, #111);
+    transform: perspective(500px) rotateX(60deg);
+    transform-origin: bottom center;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    font-size: 12px;
+    color: transparent;
+    text-align: center;
+    line-height: 30px;
+    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 15px #0ff;
+    /* Static neon effect instead of animation */
+    opacity: 0.9;
+}
+
+/* Shop Windows and Storefronts with simplified lights */
+.shop-area:after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 20px;
+    background: linear-gradient(to right, 
+        transparent 0%, transparent 10%, 
+        rgba(255, 255, 0, 0.5) 10%, rgba(255, 255, 0, 0.5) 20%,
+        transparent 20%, transparent 30%,
+        rgba(0, 255, 255, 0.5) 30%, rgba(0, 255, 255, 0.5) 40%,
+        transparent 40%, transparent 50%,
+        rgba(255, 0, 255, 0.5) 50%, rgba(255, 0, 255, 0.5) 60%,
+        transparent 60%, transparent 70%,
+        rgba(0, 255, 0, 0.5) 70%, rgba(0, 255, 0, 0.5) 80%,
+        transparent 80%, transparent 90%,
+        rgba(255, 0, 0, 0.5) 90%, rgba(255, 0, 0, 0.5) 100%
+    );
+    z-index: 1;
+    border-radius: 3px;
+    opacity: 0.6;
+    /* Removed storeLights animation to fix glitches */
+}
+
+.shop-area:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, #4caf50, #2196f3);
+    border-radius: 15px 15px 0 0;
+}
+
+#packaged-candies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    perspective: 1000px;
+}
+
+.packaged-candy {
+    position: relative;
+    width: 110px;
+    height: 130px;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border: 3px solid #ddd;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+    transform-style: preserve-3d;
+    transform: perspective(500px) rotateY(5deg);
+    cursor: pointer;
+}
+
+.packaged-candy:hover {
+    transform: perspective(500px) rotateY(-5deg) translateY(-10px);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+    border-color: #ffcc00;
+}
+
+.packaged-candy:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.packaged-candy .candy {
+    transform: scale(0.6);
+    margin-top: -10px;
+}
+
+.candy-label {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    margin-top: 5px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 3px 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.shop-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0 20px;
+    position: relative;
+}
+
+.money-display {
+    font-size: 24px;
+    color: #4caf50;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+    background: linear-gradient(145deg, #e6f7e9, #f5fff5);
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 
+        0 5px 15px rgba(0,0,0,0.1),
+        inset 0 -3px 5px rgba(0,0,0,0.05);
+    border: 2px solid #a5d6a7;
+    transform: perspective(300px) rotateX(5deg);
+}
+
+.customer-area {
+    background: linear-gradient(to bottom, #222, #1a1a1a);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotateX(2deg);
+    border: 3px solid #333;
+    /* Residential district */
+    overflow: hidden;
+    color: #ddd;
+}
+
+/* Residential Area Buildings with Animated Light Trails */
+.customer-area:before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(45deg, #333, #222);
+    transform: perspective(500px) rotateX(55deg);
+    transform-origin: bottom center;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+}
+
+/* Residential Area with Moving Car Lights */
+.customer-area:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: #333;
+    z-index: 0;
+    background-image: 
+        radial-gradient(circle at 10% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%),
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 50%);
+    background-size: 100px 10px;
+    background-position: 20px 0;
+    /* Removed carLights animation to reduce glitches */
+}
+
+#customer-container {
+    height: 150px;
+    position: relative;
+    margin: 15px 0;
+    background: linear-gradient(to bottom, #222 0%, #222 60%, #333 60%, #333 100%);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    transform-style: preserve-3d;
+}
+
+.customer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 120px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+}
+
+/* City Residents/Houses as Skyscrapers */
+.customer:before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: -15px;
+    width: 50px;
+    height: 100px;
+    background: linear-gradient(to bottom, #333, #222);
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3),
+                5px 10px 0 -3px rgba(255, 255, 0, 0.1),
+                -10px 20px 0 -5px rgba(0, 255, 255, 0.1);
+    z-index: -1;
+    /* Removed buildingLights animation to fix glitches */
+}
+
+/* Skyscraper Tops */
+.customer:after {
+    content: '';
+    position: absolute;
+    bottom: 90px;
+    left: -10px;
+    width: 40px;
+    height: 20px;
+    background: #111;
+    transform: perspective(100px) rotateX(30deg);
+    transform-origin: bottom center;
+    border-radius: 3px;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    z-index: -1;
+}
+
+/* Special skyscraper types */
+.customer.child:before {
+    background: linear-gradient(to bottom, #333, #392613);
+    height: 70px;
+}
+
+.customer.adult:before {
+    background: linear-gradient(to bottom, #333, #14283d);
+    height: 100px;
+}
+
+.customer.elder:before {
+    background: linear-gradient(to bottom, #333, #331431);
+    height: 85px;
+}
+
+.customer.entering {
+    transform: translateX(-300%);
+    animation: customerEntering 1.5s forwards;
+}
+
+@keyframes customerEntering {
+    0% { transform: translateX(-300%); }
+    100% { transform: translateX(-50%); }
+}
+
+.customer.leaving {
+    transform: translateX(200%);
+    animation: customerLeaving 1.5s forwards;
+}
+
+@keyframes customerLeaving {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(200%); }
+}
+
+.customer.child {
+    background-image: url('https://cdn.pixabay.com/photo/2014/04/03/10/01/girl-309606_1280.png');
+    height: 90px;
+}
+
+.customer.adult {
+    background-image: url('https://cdn.pixabay.com/photo/2014/04/03/10/32/businessman-310819_1280.png');
+    height: 120px;
+}
+
+.customer.elder {
+    background-image: url('https://cdn.pixabay.com/photo/2014/04/03/10/31/grandmother-310818_1280.png');
+    height: 110px;
+}
+
+.customer.entering {
+    transform: translateX(-300%);
+}
+
+.customer.leaving {
+    transform: translateX(200%);
+}
+
+#customer-request {
+    background-color: white;
+    border: 2px solid #f0f0f0;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+    min-height: 60px;
+    font-size: 16px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#customer-feedback {
+    min-height: 50px;
+    margin-top: 10px;
+    font-style: italic;
+    color: #666;
+    text-align: center;
+}
+
+#serve-customer {
+    background-color: #ff9800;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px auto;
+    display: block;
+}
+
+#serve-customer:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.game-controls {
+    margin-top: 30px;
+    text-align: center;
+    background-color: #e1f5fe;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#start-day-button {
+    background-color: #673ab7;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.day-info {
+    font-size: 18px;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.time-left {
+    color: #e91e63;
+    font-weight: bold;
+}
+
+/* Shop Upgrades Section */
+.shop-upgrades {
+    margin-top: 30px;
+    background-color: #fff5e6;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.shop-upgrades h2 {
+    color: #ff6b00;
+    margin-bottom: 5px;
+}
+
+.upgrades-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.upgrade-item {
+    width: 200px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    position: relative;
+}
+
+.upgrade-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+}
+
+.upgrade-item.purchased {
+    background-color: #e8f5e9;
+    border: 2px solid #4caf50;
+}
+
+.upgrade-item.purchased .buy-button {
+    background-color: #4caf50;
+    cursor: default;
+}
+
+.upgrade-item.purchased .buy-button:hover {
+    background-color: #4caf50;
+}
+
+.upgrade-item h3 {
+    color: #673ab7;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.upgrade-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 10px auto;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+}
+
+.price {
+    color: #e91e63;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.buy-button {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buy-button:hover {
+    background-color: #f57c00;
+}
+
+.upgrade-ribbon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 0 12px 0 12px;
+}
+
+/* 3D effects */
+.bowl, .candy, .packaged-candy {
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.bowl:hover, .candy:hover, .packaged-candy:hover {
+    transform: translateY(-5px) rotate(2deg);
+    box-shadow: 5px 8px 15px rgba(0,0,0,0.3);
+}
+
+.ingredients-section, .mixing-bowl, .candy-result, .shop-area {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.05);
+    transform-style: preserve-3d;
+    perspective: 500px;
+}
+
+/* Roblox-Style Upgrades */
+.upgrade-item {
+    transform-style: preserve-3d;
+    transition: transform 0.5s, box-shadow 0.5s;
+    border: 3px solid #ddd;
+}
+
+.upgrade-item:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    border-color: #ffcc00;
+}
+
+/* Rainbow animation for Rainbow Candy upgrade - simplified */
+#rainbow-candy {
+    background: linear-gradient(45deg, #ff5252, #ffeb3b, #4caf50, #2196f3, #9c27b0);
+    background-size: 400% 400%;
+    animation: rainbow-bg 10s ease infinite; /* Slowed down animation */
+}
+
+@keyframes rainbow-bg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+#rainbow-candy h3, #rainbow-candy p {
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* VIP Shop golden effect */
+#vip-shop {
+    background: linear-gradient(45deg, #ffd700, #f0e68c);
+    border: 3px solid #ffd700;
+}
+
+#vip-shop h3 {
+    color: #8b4513;
+}
+
+/* Super Speed lightning effect */
+#super-speed {
+    overflow: hidden;
+    position: relative;
+}
+
+#super-speed::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 0, 0.1) 10px,
+        rgba(255, 255, 0, 0.1) 20px
+    );
+    /* Removed animation to reduce visual conflicts */
+    pointer-events: none;
+}
+
+/* Robot helper for Auto-Serve */
+.robot-helper {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #e0f7fa;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: gentleFloat 4s ease-in-out infinite; /* Using the same animation we defined earlier */
+    z-index: 1000;
+}
+
+/* Removed duplicate float animation to use the gentleFloat defined earlier */
+
+.robot-text {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background-color: white;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.robot-helper:hover .robot-text {
+    opacity: 1;
+}
+
+/* Lucky charm effect - slower rotation */
+.luck-charm {
+    animation: rotate 8s linear infinite;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* VIP customer style */
+.customer.vip {
+    background-color: gold;
+    border: 3px solid #c9b037;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.customer.vip::before {
+    content: "VIP";
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #c9b037;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Enhanced 3D Roblox-style Customer Area */
+.customer-area {
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    position: relative;
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotateX(2deg);
+    border: 3px solid #ffcc00;
+}
+
+.customer-area:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, #ff9800, #ff5722);
+    border-radius: 15px 15px 0 0;
+}
+
+#customer-container {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+    perspective: 1000px;
+}
+
+.customer {
+    width: 100px;
+    height: 150px;
+    border-radius: 50px;
+    position: relative;
+    transform-style: preserve-3d;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s;
+}
+
+.customer:before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.customer:after {
+    content: '';
+    position: absolute;
+    bottom: 40px;
+    left: 35px;
+    width: 30px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.customer.child {
+    background-color: #ffb74d;
+    height: 120px;
+    transform-origin: bottom center;
+    /* Simplified animation, less bouncy */
+    animation: bounce 3s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.customer.adult {
+    background-color: #90caf9;
+}
+
+.customer.elder {
+    background-color: #ce93d8;
+}
+
+.customer.entering {
+    transform: translateX(-200px);
+    opacity: 0;
+}
+
+.customer.leaving {
+    transform: translateX(200px);
+    opacity: 0;
+    transition: transform 1s, opacity 1s;
+}
+
+#customer-request {
+    background: linear-gradient(145deg, #fff9c4, #fff59d);
+    border-radius: 20px;
+    padding: 15px;
+    margin: 15px 0;
+    font-size: 18px;
+    position: relative;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #ffd54f;
+    transform: perspective(500px) rotateX(3deg);
+}
+
+#customer-request:before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 15px 15px 15px;
+    border-style: solid;
+    border-color: transparent transparent #ffd54f transparent;
+}
+
+#customer-feedback {
+    min-height: 60px;
+    margin: 15px 0;
+    font-style: italic;
+    color: #673ab7;
+    font-weight: bold;
+}
+
+#serve-customer {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #e65100;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#serve-customer:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #e65100, 0 15px 20px rgba(0, 0, 0, 0.2);
+}
+
+#serve-customer:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #e65100;
+}
+
+#serve-customer:disabled {
+    background-color: #bdbdbd;
+    box-shadow: 0 6px 0 #757575;
+    cursor: not-allowed;
+}
+
+/* Enhanced Game Controls */
+.game-controls {
+    background: linear-gradient(145deg, #222, #1a1a1a);
+    border-radius: 15px;
+    padding: 15px;
+    margin: 20px auto;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 80%;
+    transform: perspective(800px) rotateX(-2deg);
+    border: 3px solid #333;
+    position: relative;
+    transform-style: preserve-3d;
+    color: #ddd;
+}
+
+/* City Control Center Building with Pulse Effect */
+.game-controls:before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(45deg, #222, #111);
+    transform: perspective(500px) rotateX(50deg);
+    transform-origin: bottom center;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    /* Removed controlsPulse animation to fix glitches */
+}
+
+/* Control Tower Antenna */
+.game-controls:after {
+    content: '';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 15px;
+    background: #666;
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+    /* Removed antennaSignal animation to fix glitches */
+}
+
+#start-day-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #2e7d32;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#start-day-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #2e7d32, 0 15px 20px rgba(0, 0, 0, 0.2);
+}
+
+#start-day-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #2e7d32;
+}
+
+#start-day-button:disabled {
+    background-color: #bdbdbd;
+    box-shadow: 0 6px 0 #757575;
+    cursor: not-allowed;
+}
+
+.day-info {
+    background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 
+        0 5px 15px rgba(0,0,0,0.1),
+        inset 0 -3px 5px rgba(0,0,0,0.05);
+    border: 2px solid #81c784;
+    color: #2e7d32;
+    transform: perspective(300px) rotateX(5deg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#day-count {
+    color: #d32f2f;
+    font-size: 24px;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+.time-left {
+    margin-left: 15px;
+    position: relative;
+}
+
+.time-left:before {
+    content: '⏱️';
+    margin-right: 5px;
+    font-size: 20px;
+}
+
+#time-left {
+    color: #d32f2f;
+    font-weight: bold;
+    /* Removed pulse animation to fix glitches */
+}
