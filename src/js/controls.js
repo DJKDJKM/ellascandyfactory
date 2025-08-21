@@ -1,8 +1,8 @@
-// controls.js - Input handling
+// controls.js - Element Tycoon Style Controls
 
 import { state } from './state.js';
 import { keys } from './globals.js';
-import { updateCharacterPosition, checkCollisions, checkFigureCollection, placeConstructionItem } from './world.js';
+import { purchaseUnlock, rebirth, updateCharacterPosition, checkCollisions, handleCollectionInteraction } from './world.js';
 import { showFloatingText } from './ui.js';
 
 // Camera settings
@@ -23,29 +23,14 @@ let canvas;
 
 // Initialize controls
 function initControls(canvasElement) {
-  // Store canvas reference
   canvas = canvasElement;
   
-  // Set up click handler for pointer lock and building
+  // Set up click handler for pointer lock
   canvas.addEventListener('click', (e) => {
-    if (state.construction.buildMode.active) {
-      // In build mode, place item instead of enabling pointer lock
-      handleBuildClick(e);
-    } else {
-      // Normal mode, enable pointer lock
-      canvas.requestPointerLock = canvas.requestPointerLock || 
-                                 canvas.mozRequestPointerLock || 
-                                 canvas.webkitRequestPointerLock;
-      canvas.requestPointerLock();
-    }
-  });
-  
-  // Right click for removing items
-  canvas.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    if (state.construction.buildMode.active) {
-      handleRemoveClick(e);
-    }
+    canvas.requestPointerLock = canvas.requestPointerLock || 
+                               canvas.mozRequestPointerLock || 
+                               canvas.webkitRequestPointerLock;
+    canvas.requestPointerLock();
   });
 
   // Handle pointer lock change
@@ -59,48 +44,56 @@ function initControls(canvasElement) {
     
     // Handle jumping (space bar)
     if (e.key === ' ' && state.character.canJump) {
-      state.character.position.y += 0.5; // Simple jump
+      state.character.position.y += 0.5;
       state.character.canJump = false;
       
-      // Allow jumping again after a short delay
       setTimeout(() => {
         state.character.canJump = true;
       }, 300);
     }
     
-    // Handle Z-axis movement (up/down in world space)
+    // Handle up/down movement
     if (e.key.toLowerCase() === 'q') {
-      state.character.position.y += 0.2; // Move up
+      state.character.position.y += 0.2;
     }
     if (e.key.toLowerCase() === 'e') {
-      state.character.position.y -= 0.2; // Move down
-      // Don't go below ground level
-      if (state.character.position.y < 0.5) {
-        state.character.position.y = 0.5;
+      // First check if player is near collection points
+      if (!handleCollectionInteraction()) {
+        // If no collection interaction, do vertical movement
+        state.character.position.y -= 0.2;
+        if (state.character.position.y < 0.5) {
+          state.character.position.y = 0.5;
+        }
       }
     }
     
-    // Building mode toggle
-    if (e.key.toLowerCase() === 'b') {
-      state.construction.buildMode.active = !state.construction.buildMode.active;
-      updateBuildModeUI();
-    }
-    
-    // Item selection (1-5 keys)
-    if (e.key >= '1' && e.key <= '5') {
-      const itemTypes = ['wall', 'floor', 'stair', 'door', 'conveyor'];
-      const selectedIndex = parseInt(e.key) - 1;
-      if (selectedIndex < itemTypes.length) {
-        state.construction.buildMode.selectedItem = itemTypes[selectedIndex];
-        updateBuildModeUI();
+    // Element Tycoon purchase system (1-9 keys)
+    if (e.code >= 'Digit1' && e.code <= 'Digit9') {
+      const keyNum = parseInt(e.code.replace('Digit', ''));
+      
+      // Find the nth available unlock
+      let purchaseIndex = 1;
+      for (const unlock of state.unlocks) {
+        if (!unlock.unlocked || unlock.purchased) continue;
+        
+        if (purchaseIndex === keyNum) {
+          if (purchaseUnlock(unlock.id)) {
+            showFloatingText(`Purchased: ${unlock.name}!`, '#00FF00');
+          } else {
+            showFloatingText(`Can't afford ${unlock.name}!`, '#FF0000');
+          }
+          break;
+        }
+        purchaseIndex++;
       }
     }
     
-    // Rotate item
-    if (e.key.toLowerCase() === 'r' && state.construction.buildMode.active) {
-      state.construction.buildMode.rotation += Math.PI / 2; // 90 degree rotation
-      if (state.construction.buildMode.rotation >= Math.PI * 2) {
-        state.construction.buildMode.rotation = 0;
+    // Rebirth system (R key)
+    if (e.key.toLowerCase() === 'r' && !e.shiftKey && !e.altKey) {
+      if (rebirth()) {
+        showFloatingText(`REBIRTH! ${state.tycoon.rebirths}x Multiplier!`, '#FFD700');
+      } else {
+        showFloatingText(`Need $${state.tycoon.rebirthCost} to rebirth!`, '#FF0000');
       }
     }
   });
@@ -129,9 +122,8 @@ function updateMouseLook(e) {
     const movementX = e.movementX || e.mozMovementX || e.webkitMovementX || 0;
     const movementY = e.movementY || e.mozMovementY || e.webkitMovementY || 0;
     
-    // Fixed inverted controls by correctly interpreting mouse movement
     state.character.rotationY += movementX * camera.mouseSensitivity;
-    state.character.rotationX += movementY * camera.mouseSensitivity; // Positive for natural look
+    state.character.rotationX += movementY * camera.mouseSensitivity;
     
     // Limit the up/down look angle
     state.character.rotationX = Math.max(-Math.PI/3, Math.min(Math.PI/3, state.character.rotationX));
@@ -140,7 +132,6 @@ function updateMouseLook(e) {
 
 // Process input for character movement
 function processInput() {
-  // Movement speed
   const speed = state.character.speed;
   
   // Calculate movement direction based on camera orientation
@@ -175,14 +166,11 @@ function processInput() {
   state.character.position.x += moveX * speed;
   state.character.position.z += moveZ * speed;
   
-  // Update character position in the world
-  updateCharacterPosition();
-  
-  // Check for collisions
-  checkCollisions();
-  
-  // Check for figure collection
-  checkFigureCollection();
+  // Only update if character actually moved
+  if (moveX !== 0 || moveZ !== 0) {
+    updateCharacterPosition();
+    checkCollisions();
+  }
   
   // Update camera position
   updateCamera();
@@ -190,88 +178,15 @@ function processInput() {
 
 // Update camera position based on character position and rotation
 function updateCamera() {
-  // Look distance (how far behind the character the camera is)
   const lookDistance = 5;
   
-  // Calculate camera position based on character rotation
   camera.position.x = state.character.position.x - Math.sin(state.character.rotationY) * lookDistance;
   camera.position.y = state.character.position.y + 2 + state.character.rotationX * 2;
   camera.position.z = state.character.position.z - Math.cos(state.character.rotationY) * lookDistance;
   
-  // Update where the camera is looking
   camera.target.x = state.character.position.x;
   camera.target.y = state.character.position.y + 1 + state.character.rotationX * 2;
   camera.target.z = state.character.position.z;
-}
-
-// Handle building click (place item)
-function handleBuildClick(e) {
-  // Calculate world position from click (simplified - just use character position + offset)
-  const gridX = Math.round(state.character.position.x + 2); // 2 units in front
-  const gridY = Math.round(state.character.position.y);
-  const gridZ = Math.round(state.character.position.z);
-  
-  const selectedItemType = state.construction.buildMode.selectedItem;
-  const item = state.construction.availableItems[selectedItemType];
-  
-  if (state.money >= item.price) {
-    // Purchase and place item
-    state.money -= item.price;
-    
-    // Add to placed items
-    const placedItem = {
-      type: selectedItemType,
-      position: { x: gridX, y: gridY, z: gridZ },
-      rotation: state.construction.buildMode.rotation
-    };
-    
-    state.construction.placedItems.push(placedItem);
-    
-    // Visual feedback
-    showFloatingText(`Placed ${item.name}!`, '#00FF00');
-    
-    // Rebuild world to show new item
-    placeConstructionItem(placedItem);
-  } else {
-    showFloatingText(`Need $${item.price} for ${item.name}!`, '#FF0000');
-  }
-}
-
-// Handle remove click (remove item)
-function handleRemoveClick(e) {
-  // Find item near character position to remove
-  const charPos = state.character.position;
-  
-  for (let i = state.construction.placedItems.length - 1; i >= 0; i--) {
-    const item = state.construction.placedItems[i];
-    const distance = Math.sqrt(
-      Math.pow(charPos.x - item.position.x, 2) +
-      Math.pow(charPos.y - item.position.y, 2) +
-      Math.pow(charPos.z - item.position.z, 2)
-    );
-    
-    if (distance < 2) {
-      // Remove item and refund half the cost
-      const refund = Math.floor(state.construction.availableItems[item.type].price / 2);
-      state.money += refund;
-      state.construction.placedItems.splice(i, 1);
-      
-      showFloatingText(`Removed ${item.type}! +$${refund}`, '#FFD700');
-      
-      // Rebuild world
-      // Note: This would need a full world rebuild in a real implementation
-      break;
-    }
-  }
-}
-
-// Update building mode UI
-function updateBuildModeUI() {
-  const buildStatus = state.construction.buildMode.active ? 'ON' : 'OFF';
-  const selectedItem = state.construction.buildMode.selectedItem;
-  const item = state.construction.availableItems[selectedItem];
-  
-  showFloatingText(`Build Mode: ${buildStatus} | Selected: ${item.name} ($${item.price})`, '#00BFFF');
 }
 
 export { camera, initControls, processInput, isMouseLookEnabled };

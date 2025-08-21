@@ -6,22 +6,26 @@ import { state } from './js/state.js';
 import { initGL, drawScene, resizeCanvas } from './js/renderer.js';
 import { camera, initControls, processInput } from './js/controls.js';
 import { worldObjects, particles } from './js/globals.js';
-import { initWorld, checkFigureCollection, checkCollisions, createParticle, updateCharacterPosition, updateCandyPackages } from './js/world.js';
+import { initTycoon, updateTycoon, checkCollisions, updateCharacterPosition, createParticle } from './js/world.js';
 import { updateMoneyDisplay, showFloatingText, updateGameDisplay } from './js/ui.js';
+
+// Frame counter for performance optimization
+let frameCount = 0;
 
 // Main render loop
 function render() {
+  frameCount++;
+  
   // Process input for character movement
   processInput();
   
-  // Update candy machine packages
-  updateCandyPackages();
+  // Update Element Tycoon systems (every frame for smooth candy movement)
+  updateTycoon();
   
-  // Update game display
-  updateGameDisplay();
-  
-  // Check for figure collection (now simplified)
-  checkFigureCollection();
+  // Update game display less frequently (every 30 frames = ~0.5 seconds)
+  if (frameCount % 30 === 0) {
+    updateGameDisplay();
+  }
   
   // Draw the scene
   drawScene();
@@ -46,7 +50,7 @@ function init() {
   window.addEventListener('resize', resizeCanvas);
   
   // Create the initial world
-  initWorld();
+  initTycoon();
   
   // Set up the UI
   updateMoneyDisplay();

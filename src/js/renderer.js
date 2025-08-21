@@ -3,12 +3,16 @@
 import { state } from './state.js';
 import { camera } from './controls.js';
 import { worldObjects, particles } from './globals.js';
-import { getElementColor } from './world.js';
+import { getCandyColor } from './world.js';
 
 // Initialize WebGL
 let gl;
 let programInfo;
 let canvas;
+
+// Shared buffers for performance
+let sharedCandyBuffer = null;
+let sharedParticleBuffer = null;
 
 // Initialize WebGL context
 function initGL(canvasElement) {
@@ -35,6 +39,9 @@ function initGL(canvasElement) {
       modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
     },
   };
+
+  // Initialize shared buffers for candies and particles
+  initSharedBuffers();
 
   return gl;
 }
@@ -79,6 +86,17 @@ function createShaderProgram(vertexShaderSource, fragmentShaderSource) {
   }
   
   return shaderProgram;
+}
+
+// Initialize shared buffers for performance optimization
+function initSharedBuffers() {
+  // Create a standard 0.3x0.3x0.3 cube for candies
+  const candyGeometry = createCube(0, 0, 0, 0.3, 0.3, 0.3, 1, 1, 1);
+  sharedCandyBuffer = initBuffers(candyGeometry);
+  
+  // Create a standard 0.1x0.1x0.1 cube for particles
+  const particleGeometry = createCube(0, 0, 0, 0.1, 0.1, 0.1, 1, 1, 1);
+  sharedParticleBuffer = initBuffers(particleGeometry);
 }
 
 // Vertex shader source
@@ -128,7 +146,13 @@ function initBuffers(cube) {
     position: positionBuffer,
     color: colorBuffer,
     indices: indexBuffer,
-    vertexCount: cube.indices.length
+    vertexCount: cube.indices.length,
+    center: [cube.positions[0] + (cube.positions[3] - cube.positions[0])/2, 
+             cube.positions[1] + (cube.positions[7] - cube.positions[1])/2, 
+             cube.positions[2] + (cube.positions[11] - cube.positions[2])/2],
+    dimensions: [Math.abs(cube.positions[3] - cube.positions[0]), 
+                 Math.abs(cube.positions[7] - cube.positions[1]), 
+                 Math.abs(cube.positions[11] - cube.positions[2])]
   };
 }
 
@@ -193,6 +217,36 @@ function createPerspectiveMatrix(fov, aspect, near, far) {
   matrix[15] = 0;
   
   return matrix;
+}
+
+// Create a translation matrix
+function createTranslationMatrix(x, y, z) {
+  const matrix = new Float32Array(16);
+  
+  // Identity matrix
+  matrix[0] = 1;  matrix[4] = 0;  matrix[8] = 0;   matrix[12] = x;
+  matrix[1] = 0;  matrix[5] = 1;  matrix[9] = 0;   matrix[13] = y;
+  matrix[2] = 0;  matrix[6] = 0;  matrix[10] = 1;  matrix[14] = z;
+  matrix[3] = 0;  matrix[7] = 0;  matrix[11] = 0;  matrix[15] = 1;
+  
+  return matrix;
+}
+
+// Multiply two 4x4 matrices
+function multiplyMatrices(a, b) {
+  const result = new Float32Array(16);
+  
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      result[i * 4 + j] = 
+        a[i * 4 + 0] * b[0 * 4 + j] +
+        a[i * 4 + 1] * b[1 * 4 + j] +
+        a[i * 4 + 2] * b[2 * 4 + j] +
+        a[i * 4 + 3] * b[3 * 4 + j];
+    }
+  }
+  
+  return result;
 }
 
 // Create a look-at matrix
@@ -296,8 +350,18 @@ function drawScene() {
     projectionMatrix
   );
   
-  // Draw all world objects
+  // Draw all world objects (tycoon buildings)
   for (const obj of worldObjects) {
+    // Create buffer if needed
+    if (!obj.buffer) {
+      const cubeGeometry = createCube(
+        obj.position[0], obj.position[1], obj.position[2],
+        obj.size[0], obj.size[1], obj.size[2],
+        obj.color[0], obj.color[1], obj.color[2]
+      );
+      obj.buffer = initBuffers(cubeGeometry);
+    }
+    
     // Set view matrix for this object
     gl.uniformMatrix4fv(
       programInfo.uniformLocations.modelViewMatrix,
@@ -306,76 +370,132 @@ function drawScene() {
     );
     
     // Draw the object
-    drawCube(obj.buffer);
+    if (obj.buffer && obj.buffer.indices) {
+      drawCube(obj.buffer);
+    }
   }
+  
+  // Draw active candies
+  drawCandies(viewMatrix);
   
   // Draw particles
   drawParticles(viewMatrix);
 }
 
-// Draw particle effects
+// Draw active candies using shared buffer for performance
+function drawCandies(viewMatrix) {
+  if (!sharedCandyBuffer) return;
+  
+  state.tycoon.activeCandies.forEach(candy => {
+    // Create translation matrix for candy position
+    const translationMatrix = createTranslationMatrix(
+      candy.position.x, 
+      candy.position.y, 
+      candy.position.z
+    );
+    
+    // Combine view matrix with translation
+    const modelViewMatrix = multiplyMatrices(viewMatrix, translationMatrix);
+    
+    // Set model-view matrix
+    gl.uniformMatrix4fv(
+      programInfo.uniformLocations.modelViewMatrix,
+      false,
+      modelViewMatrix
+    );
+    
+    // Update the color buffer with candy color
+    updateBufferColor(sharedCandyBuffer, candy.color[0], candy.color[1], candy.color[2]);
+    
+    // Draw the candy
+    drawCube(sharedCandyBuffer);
+  });
+}
+
+// Update buffer color dynamically
+function updateBufferColor(buffer, r, g, b) {
+  // Create color array for all vertices (24 vertices for a cube)
+  const colors = [];
+  for (let i = 0; i < 24; i++) {
+    colors.push(r, g, b, 1.0);
+  }
+  
+  // Update the color buffer
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer.color);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW);
+}
+
+// Draw particle effects using shared buffer for performance
 function drawParticles(viewMatrix) {
+  if (!sharedParticleBuffer) return;
+  
   // Update particles positions and draw them
   for (let i = particles.length - 1; i >= 0; i--) {
     const particle = particles[i];
     
     // Update particle position
-    particle.position.x += particle.velocity.x;
-    particle.position.y += particle.velocity.y;
-    particle.position.z += particle.velocity.z;
+    particle.position[0] += particle.velocity[0];
+    particle.position[1] += particle.velocity[1];
+    particle.position[2] += particle.velocity[2];
     
     // Apply gravity
-    particle.velocity.y -= 0.01;
+    particle.velocity[1] -= 0.01;
     
     // Update life
-    particle.life++;
+    particle.life -= 0.02;
     
     // Remove if expired
-    if (particle.life > particle.maxLife) {
+    if (particle.life <= 0) {
       particles.splice(i, 1);
       continue;
     }
     
-    // Draw particle as a small cube
-    const opacity = 1 - (particle.life / particle.maxLife);
-    const size = particle.size * opacity;
+    // Create translation matrix for particle position
+    const translationMatrix = createTranslationMatrix(
+      particle.position[0],
+      particle.position[1], 
+      particle.position[2]
+    );
     
-    // Parse the color to get RGB components
-    let r, g, b;
-    if (particle.color.startsWith('#')) {
-      const hex = particle.color.substring(1);
-      r = parseInt(hex.substring(0, 2), 16) / 255;
-      g = parseInt(hex.substring(2, 4), 16) / 255;
-      b = parseInt(hex.substring(4, 6), 16) / 255;
-    } else {
-      // Default to white if color can't be parsed
-      r = g = b = 1;
-    }
+    // Combine view matrix with translation
+    const modelViewMatrix = multiplyMatrices(viewMatrix, translationMatrix);
     
-    // Create a small cube for the particle
-    const particleCube = createCube(
-      particle.position.x, 
-      particle.position.y, 
-      particle.position.z,
-      size, size, size,
-      r, g, b
+    // Set model-view matrix
+    gl.uniformMatrix4fv(
+      programInfo.uniformLocations.modelViewMatrix,
+      false,
+      modelViewMatrix
+    );
+    
+    // Update color with opacity based on life
+    const opacity = particle.life;
+    updateBufferColor(sharedParticleBuffer, 
+      particle.color[0] * opacity, 
+      particle.color[1] * opacity, 
+      particle.color[2] * opacity
     );
     
     // Draw the particle
-    const particleBuffer = initBuffers(particleCube);
-    drawCube(particleBuffer);
+    drawCube(sharedParticleBuffer);
   }
 }
 
 // Resize canvas to match display size
 function resizeCanvas() {
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-    gl.viewport(0, 0, width, height);
-    camera.aspect = width / height;
+  const displayWidth = canvas.clientWidth;
+  const displayHeight = canvas.clientHeight;
+  
+  // Check if the canvas is not the same size
+  if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+    // Make the canvas the same size
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
+    
+    // Set the viewport to match
+    gl.viewport(0, 0, displayWidth, displayHeight);
+    
+    // Update camera aspect ratio
+    camera.aspect = displayWidth / displayHeight;
   }
 }
 
