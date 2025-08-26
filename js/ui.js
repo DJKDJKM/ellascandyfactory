@@ -5,6 +5,10 @@ import { keys } from './globals.js';
 import { createParticle, getElementColor } from './world.js';
 import { initWorld } from './world.js';
 
+// Collect button cooldown tracking
+let lastCollectTime = 0;
+const COLLECT_COOLDOWN = 2000; // 2 seconds cooldown
+
 // Update money display
 function updateMoneyDisplay() {
   document.getElementById('money-display').textContent = `Candy Credits: $${state.money}`;
@@ -169,18 +173,35 @@ function handleButtonInteraction(button) {
   
   switch (button.action) {
     case 'collect':
-      // Collect money button
-      collectMoney();
+      // Collect money button with cooldown
+      const currentTime = Date.now();
+      const timeRemaining = COLLECT_COOLDOWN - (currentTime - lastCollectTime);
       
-      // Show the collect button being pressed
-      upgradeInfo.innerHTML = `<p>Standing on: ${button.name}</p>`;
-      upgradeInfo.style.display = 'block';
-      
-      setTimeout(() => {
-        if (upgradeInfo.innerHTML.includes(button.name)) {
-          upgradeInfo.style.display = 'none';
-        }
-      }, 1000);
+      if (timeRemaining > 0) {
+        // Show cooldown message
+        upgradeInfo.innerHTML = `<p>Collect on cooldown: ${Math.ceil(timeRemaining / 1000)}s remaining</p>`;
+        upgradeInfo.style.display = 'block';
+        
+        setTimeout(() => {
+          if (upgradeInfo.innerHTML.includes('cooldown')) {
+            upgradeInfo.style.display = 'none';
+          }
+        }, 1000);
+      } else {
+        // Allow collection
+        lastCollectTime = currentTime;
+        collectMoney();
+        
+        // Show the collect button being pressed
+        upgradeInfo.innerHTML = `<p>Standing on: ${button.name}</p>`;
+        upgradeInfo.style.display = 'block';
+        
+        setTimeout(() => {
+          if (upgradeInfo.innerHTML.includes(button.name)) {
+            upgradeInfo.style.display = 'none';
+          }
+        }, 1000);
+      }
       break;
       
     case 'element':
