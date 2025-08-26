@@ -5,6 +5,10 @@ import { createCube, createPyramid, createCylinder, initBuffers } from './render
 import { worldObjects, particles, keys } from './globals.js';
 import { updateMoneyDisplay, showFloatingText, handleButtonInteraction } from './ui.js';
 
+// E key debouncing
+let lastEKeyTime = 0;
+const E_KEY_DEBOUNCE = 200; // 200ms debounce
+
 // Initialize the world
 function initWorld() {
   // Clear world objects
@@ -267,9 +271,13 @@ function checkCollisions() {
         Math.abs(state.character.position.z - button.z) < 0.7;
       
       if (onSameFloor && overButton) {
-        // Player is on a button, trigger interaction if E is pressed
+        // Player is on a button, trigger interaction if E is pressed (with debouncing)
         if (keys['e']) {
-          handleButtonInteraction(obj.buttonData);
+          const currentTime = Date.now();
+          if (currentTime - lastEKeyTime > E_KEY_DEBOUNCE) {
+            lastEKeyTime = currentTime;
+            handleButtonInteraction(obj.buttonData);
+          }
         }
       }
     }

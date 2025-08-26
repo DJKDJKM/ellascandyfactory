@@ -416,9 +416,9 @@ function collectMoney() {
     }
   });
   
-  // Always give at least some money
-  if (totalCollected < 1 && state.factory.activeElements.length > 0) {
-    totalCollected = 10; // Minimum collection amount
+  // Only give money if there are active candy elements producing
+  if (totalCollected < 1) {
+    totalCollected = 0; // No money if no production
   }
   
   // Round and add to total
@@ -452,6 +452,17 @@ function collectMoney() {
     
     setTimeout(() => {
       if (upgradeInfo.innerHTML.includes('Collected')) {
+        upgradeInfo.style.display = 'none';
+      }
+    }, 2000);
+  } else {
+    // Show message when no production to collect
+    const upgradeInfo = document.getElementById('upgrade-info');
+    upgradeInfo.innerHTML = `<p>No candy production to collect! Build candy machines first.</p>`;
+    upgradeInfo.style.display = 'block';
+    
+    setTimeout(() => {
+      if (upgradeInfo.innerHTML.includes('No candy production')) {
         upgradeInfo.style.display = 'none';
       }
     }, 2000);
